@@ -1,6 +1,6 @@
 from flask import Flask
 from random import randint
-
+import requests
 
 
 app = Flask(__name__)
