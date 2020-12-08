@@ -5,7 +5,7 @@ import requests
 
 app = Flask(__name__)
 
-
+@app.route('/')
 @app.route('/haba/')
 def hello_world():
 
