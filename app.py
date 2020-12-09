@@ -49,7 +49,7 @@ def numc(num):
         if '-' in l:
             l = ' '.join(l.split('-'))
         if int(num) % 2 == 0:
-            m = True
+            n = True
         else:
-            m = False
-        return json.dumps({"status": "OK", "number": int(num), "isEven": m, "words": str(l)})
+            n = False
+        return json.dumps({"status": "OK", "number": int(num), "isEven": n, "words": str(l)})
