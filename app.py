@@ -22,24 +22,21 @@ def menu():
            '<li><a href="/task1/i_will_not/">/task1/i_will_not/</a></li>',
            '</ul>']
     return "<pre>{}</pre>".format(''.join(ans))
-
 @app.route('/task2/avito/<city>/<category>/<ad>/')
 def avito(city, category, ad):
     out = """<h1>debug info</h1><p>city={} category={} ad={}</p><h1>{}</h1><p>{}</p>""".format(city, category, ad, category[1], city[1])
     return out
-
 @app.route('/task2/cf/profile/<username>')
 def codeforces(username):
     url = 'https://codeforces.com/api/user.info?handles={}'.format(username)
     ans = '<table id="stats" border="1"><tr>{}</tr><tr>{}</tr></table>'
-    f = '<td>User</td><td>Rating</td>'
-    s = '<td>{}</td><td>{}</td>'
-    req = requests.get(url)
-    k = req.json()
-    if k['status'] != 'OK':
+    first = '<td>User</td><td>Rating</td>'
+    second = '<td>{}</td><td>{}</td>'
+    r = requests.get(url)
+    s = r.json()
+    if s['status'] != 'OK':
         return 'User not found'
-    return ans.format(f, s.format(username, str(k['result'][0]['rating'])))
-
+    return ans.format(first, second.format(username, str(s['result'][0]['rating'])))
 @app.route('/task2/num2words/<num>/')
 def numc(num):
     if int(num) < 0 or int(num) > 999:
