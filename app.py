@@ -38,3 +38,4 @@ ans = ['<ul type="disc" id="menu">',
 '<li><a href="/task1/i_will_not/">/task1/i_will_not/</a></li>',
 '</ul>']
 return "<pre>{}</pre>".format(''.join(ans))
+
