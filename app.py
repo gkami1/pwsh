@@ -8,6 +8,8 @@ app = Flask(__name__)
 @app.route('/task1/random/')
 def rand():
     return "Haba's mark is {}".format(str(randint(1, 5)))
+
+
 @app.route('/task1/i_will_not/')
 def i_will_not():
     ans = ['<ul type="disc" id="blackboard">']
@@ -15,6 +17,8 @@ def i_will_not():
         ans.append('<li>I will not waste time</li>')
     ans.append('</ul>')
     return "<pre>{}</pre>".format(''.join(ans))
+
+
 @app.route('/')
 def menu():
     ans = ['<ul type="disc" id="menu">',
@@ -22,10 +26,14 @@ def menu():
            '<li><a href="/task1/i_will_not/">/task1/i_will_not/</a></li>',
            '</ul>']
     return "<pre>{}</pre>".format(''.join(ans))
+
+
 @app.route('/task2/avito/<city>/<category>/<ad>/')
 def avito(city, category, ad):
     out = """<h1>debug info</h1><p>city={} category={} ad={}</p><h1>{}</h1><p>{}</p>""".format(city, category, ad, category[1], city[1])
     return out
+
+
 @app.route('/task2/cf/profile/<username>')
 def codeforces(username):
     url = 'https://codeforces.com/api/user.info?handles={}'.format(username)
@@ -37,6 +45,8 @@ def codeforces(username):
     if s['status'] != 'OK':
         return 'User not found'
     return ans.format(first, second.format(username, str(s['result'][0]['rating'])))
+
+
 @app.route('/task2/num2words/<num>/')
 def numc(num):
     if int(num) < 0 or int(num) > 999:
