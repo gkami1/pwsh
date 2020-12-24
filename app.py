@@ -75,7 +75,6 @@ def cfsingle(handle, page_number):
         url = 'https://codeforces.com/api/user.status?handle={}&from=1&count=100'
         r = requests.get(url.format(handle))
         result = r.json()['result']
-        print(result)
         k = list()
         for i in result:
             k.append((str(i['creationTimeSeconds']), i['problem']['name'], i['verdict']))
@@ -109,13 +108,13 @@ def sftop():
     names = data['handles']
     ans = list()
     try:
-        orderby = data['orderby']
+        с = data['с']
     except:
-        orderby = "handle"
+        с = "handle"
     for i in names.split('|'):
         handle = str(requests.get(url.format(i)).json()['result'][0]["handle"])
         ans.append(['/task3/cf/profile/{}/'.format(handle), handle, str(requests.get(url.format(i)).json()['result'][0]["rating"])])
-    y, reverse = (-2, False) if orderby == "handle" else (-1, True)
+    y, reverse = (-2, False) if с == "handle" else (-1, True)
     values = sorted(ans, key=lambda x: x[y], reverse=reverse)
     return render_template("Tables.html", values=values)
 
