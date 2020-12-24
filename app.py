@@ -79,7 +79,7 @@ def cfsingle(handle, page_number):
         for i in result:
             k.append((str(i['creationTimeSeconds']), i['problem']['name'], i['verdict']))
             if len(k) == 25:
-                ans.append(p.copy())
+                ans.append(k.copy())
                 k.clear()
         if len(k) != 0:
             ans.append(k.copy())
@@ -120,7 +120,7 @@ def sftop():
 
 
 @app.errorhandler(404)
-def page_not_found(error):
+def page_not_found():
     return render_template("404.html")
 
 app.run()
