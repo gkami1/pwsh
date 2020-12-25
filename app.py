@@ -130,5 +130,3 @@ def sftop():
 def page_not_found():
     return render_template("404.html")
 
-
-app.run()
