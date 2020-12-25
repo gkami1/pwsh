@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% block content %}
+  <nav aria-label="...">
+    <ul class="pagination">
+      {% for i, link in links %}
+        {% if i == "Next" %}
+        <li class="page-item {% if current_page == count_of_pages %}disabled{% endif %}">
+        {% elif i == "Previous" %}
+        <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+        {% elif i != "Next" %}
+        <li class="page-item {% if i == current_page %}active{% endif %}">
+        {% endif %}
+          <a class="page-link" href="{{ link }}" tabindex="-1">{{ i }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endblock %}
+
+
+{% block body %}
+<table class="table" id="submissions">
+    <thead>
+        <tr>
+            <th scope="col">Время</th>
+            <th scope="col">Задача</th>
+            <th scope="col">Вердикт</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for time, task, verdict in rows %}
+        <tr>
+            <td>{{ time }}</td>
+            <td>{{ task }}</td>
+            <td>{{ verdict }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

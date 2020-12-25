@@ -1,4 +1,3 @@
 requests
-Flask
+flask
 gunicorn
-inflect

@@ -1,0 +1,19 @@
+{% extends "main.html" %}
+{% block body %}
+<table class="table" id="top">
+    <thead>
+        <tr>
+            <th scope="col">Пользователь</th>
+            <th scope="col">Рейтинг</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for link, name, rating in values %}
+        <tr>
+            <td><a href="{{ link }}">{{ name }}</a></td>
+            <td>{{ rating }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
