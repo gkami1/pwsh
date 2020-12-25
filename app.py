@@ -1,14 +1,19 @@
+from flask import Flask, redirect, url_for, abort, render_template, request
 from random import randint
-from flask import Flask, render_template, request, abort, redirect, url_for
-import requests
 import json
-
-proxies = {
-    "http": "http://192.168.2.1:3128",
-    "https": "http://192.168.2.1:3128"
-}
+import requests
 
 app = Flask(__name__)
+
+
+@app.route('/haba/')
+def hello_world():
+    s = ["Hello, Haba!",
+         "Hello, Arsen!",
+         "Hello, Karim!"]
+
+    out = "<pre>{}</pre>".format("\n".join(s))
+    return out
 
 
 @app.route('/task1/random/')
@@ -34,11 +39,16 @@ def menu():
     return "<pre>{}</pre>".format(''.join(ans))
 
 
-@app.route('/task2/avito/<city>/<category>/<ad>/')
-def avito(city, category, ad):
-    out = """<h1>debug info</h1><p>city={} category={} ad={}</p><h1>{}</h1><p>{}</p>""".format(city, category, ad,
-                                                                                               category[1], city[1])
-    return out
+@app.route('/task2/avito/<city>/<category>/<announcement>')
+def avito(city, category, announcement):
+    letters = list('qwertyuiopasdfghjklzxcvbn m')
+    product = announcement.split('_')[:-1]
+    ans = list()
+    ans.append('<h1>debug info</h1>')
+    ans.append('<p>city={} category={} ad={}</p>'.format(city, category, announcement))
+    ans.append('<h1>{}</h1>'.format(' '.join([i.capitalize() for i in product])))
+    ans.append('<p>{}</p>'.format(product[0][0]))
+    return '\n'.join(ans)
 
 
 @app.route('/task2/cf/profile/<username>')
@@ -54,39 +64,59 @@ def codeforces(username):
     return ans.format(first, second.format(username, str(s['result'][0]['rating'])))
 
 
-@app.route('/task2/num2words/<num>/')
-def numc(num):
-    if int(num) < 0 or int(num) > 999:
-        return json.dumps({"status": "FAIL"})
-    else:
-        p = inflect.engine()
-        l = p.number_to_words(int(num))
-        if 'and' in l:
-            l = ''.join(l.split(' and'))
-        if '-' in l:
-            l = ' '.join(l.split('-'))
-        if int(num) % 2 == 0:
-            n = True
+@app.route('/task2/num2words/<num>')
+def num_words(num):
+    numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+    decimal_numbers = ['twenty', 'thirty', 'forty', 'fifty',
+                       'sixty', 'seventy', 'eighty', 'ninety']
+    bad_numbers = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen',
+                   'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
+    ans = dict()
+    if num.isdigit():
+        num = int(num)
+        if num > 999 or num < 0:
+            status = 'FAIL'
         else:
-            n = False
-        return json.dumps({"status": "OK", "number": int(num), "isEven": n, "words": str(l)})
+            status = 'OK'
+    else:
+        status = 'FAIL'
+    ans['status'] = status
+    if status == 'FAIL':
+        return json.dumps(ans)
+    ans['number'] = num
+    ans['isEven'] = False if num % 2 != 0 else True
+
+    words = list()
+    if num // 100 > 0:
+        words.append(numbers[num // 100])
+        words.append('hundred')
+    second_num = num // 10 - num // 100 * 10
+    if second_num == 1:
+        words.append(bad_numbers[num % 10])
+    else:
+        if second_num != 0:
+            words.append(decimal_numbers[second_num - 2])
+        if num % 10 != 0:
+            words.append(numbers[num % 10])
+    ans['words'] = ' '.join(words)
+    return json.dumps(ans)
 
 
 @app.route('/task3/cf/profile/<handle>/page/<page_number>/')
-def cfsingle(handle, page_number):
+def profiles(handle, page_number):
     try:
         ans = list()
         url = 'https://codeforces.com/api/user.status?handle={}&from=1&count=100'
-        r = requests.get(url.format(handle), proxies=proxies)
+        r = requests.get(url.format(handle))
         result = r.json()['result']
-        k = list()
+        p = list()
         for i in result:
-            k.append((str(i['creationTimeSeconds']), i['problem']['name'], i['verdict']))
-            if len(k) == 25:
-                ans.append(k.copy())
-                k.clear()
-        if len(k) != 0:
-            ans.append(k.copy())
+            p.append((str(i['creationTimeSeconds']), i['problem']['name'], i['verdict']))
+            if len(p) == 25:
+                ans.append(p.copy())
+                p.clear()
+        if len(p) != 0:
+            ans.append(p.copy())
         if len(ans) < int(page_number) or int(page_number) <= 0:
             abort(404)
         links = list()
@@ -94,21 +124,19 @@ def cfsingle(handle, page_number):
         for i in range(len(ans)):
             links.append((i + 1, "/task3/cf/profile/{}/page/{}/".format(handle, str(i + 1))))
         links.append(("Next", "/task3/cf/profile/{}/page/{}/".format(handle, int(page_number) + 1)))
-        pagination = render_template("kek.html", links=links, current_page=int(page_number),
-                                     rows=ans[int(page_number) - 1], count_of_pages=len(ans))
+        pagination = render_template("kek.html", links=links, current_page=int(page_number), rows=ans[int(page_number) - 1], count_of_pages=len(ans))
         return pagination
     except:
-        return "<h1>НЕТ</h1>"
+        return "<h1>НЕТУ</h1>"
 
 
 @app.route('/task3/cf/profile/<handle>/')
 def redir(handle):
-    return redirect(url_for('kek.html', handle=handle, page_number="1"))
-
+    return redirect(url_for('kek', handle=handle, page_number="1"))
 
 
 @app.route('/task3/cf/top/')
-def sftop():
+def top():
     data = request.args.copy()
     url = 'https://codeforces.com/api/user.info?handles={}'
     names = data['handles']
@@ -118,16 +146,13 @@ def sftop():
     except:
         orderby = "handle"
     for i in names.split('|'):
-        handle = str(requests.get(url.format(i), proxies=proxies).json()['result'][0]["handle"])
-        ans.append(['/task3/cf/profile/{}/'.format(handle), handle,
-                    str(requests.get(url.format(i)).json()['result'][0]["rating"])])
+        handle = str(requests.get(url.format(i)).json()['result'][0]["handle"])
+        ans.append(['/task3/cf/profile/{}/'.format(handle), handle, str(requests.get(url.format(i)).json()['result'][0]["rating"])])
     y, reverse = (-2, False) if orderby == "handle" else (-1, True)
     values = sorted(ans, key=lambda x: x[y], reverse=reverse)
     return render_template("Tables.html", values=values)
 
 
 @app.errorhandler(404)
-def page_not_found():
-    return render_template("404.html")
-
-app.run()
+def page_not_found(error):
+    return render_template("nf.html"), 404
