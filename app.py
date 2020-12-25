@@ -1,11 +1,16 @@
 from random import randint
 from flask import Flask, render_template, request, abort, redirect, url_for
-import requests
 import inflect
+import requests
 import json
 
+proxies = {
+    "http": "http://192.168.2.1:3128",
+    "https": "http://192.168.2.1:3128"
+}
 
 app = Flask(__name__)
+
 
 @app.route('/task1/random/')
 def rand():
@@ -32,7 +37,8 @@ def menu():
 
 @app.route('/task2/avito/<city>/<category>/<ad>/')
 def avito(city, category, ad):
-    out = """<h1>debug info</h1><p>city={} category={} ad={}</p><h1>{}</h1><p>{}</p>""".format(city, category, ad, category[1], city[1])
+    out = """<h1>debug info</h1><p>city={} category={} ad={}</p><h1>{}</h1><p>{}</p>""".format(city, category, ad,
+                                                                                               category[1], city[1])
     return out
 
 
@@ -65,15 +71,14 @@ def numc(num):
         else:
             n = False
         return json.dumps({"status": "OK", "number": int(num), "isEven": n, "words": str(l)})
-    
-    
-    
+
+
 @app.route('/task3/cf/profile/<handle>/page/<page_number>/')
 def cfsingle(handle, page_number):
     try:
         ans = list()
         url = 'https://codeforces.com/api/user.status?handle={}&from=1&count=100'
-        r = requests.get(url.format(handle))
+        r = requests.get(url.format(handle), proxies=proxies)
         result = r.json()['result']
         k = list()
         for i in result:
@@ -90,7 +95,8 @@ def cfsingle(handle, page_number):
         for i in range(len(ans)):
             links.append((i + 1, "/task3/cf/profile/{}/page/{}/".format(handle, str(i + 1))))
         links.append(("Next", "/task3/cf/profile/{}/page/{}/".format(handle, int(page_number) + 1)))
-        pagination = render_template("kek.html", links=links, current_page=int(page_number), rows=ans[int(page_number) - 1], count_of_pages=len(ans))
+        pagination = render_template("kek.html", links=links, current_page=int(page_number),
+                                     rows=ans[int(page_number) - 1], count_of_pages=len(ans))
         return pagination
     except:
         return "<h1>НЕТ</h1>"
@@ -101,6 +107,7 @@ def redir(handle):
     return redirect(url_for('kek.html', handle=handle, page_number="1"))
 
 
+
 @app.route('/task3/cf/top/')
 def sftop():
     data = request.args.copy()
@@ -108,12 +115,13 @@ def sftop():
     names = data['handles']
     ans = list()
     try:
-        с = data['с']
+        с = data['orderby']
     except:
         с = "handle"
     for i in names.split('|'):
-        handle = str(requests.get(url.format(i)).json()['result'][0]["handle"])
-        ans.append(['/task3/cf/profile/{}/'.format(handle), handle, str(requests.get(url.format(i)).json()['result'][0]["rating"])])
+        handle = str(requests.get(url.format(i), proxies=proxies).json()['result'][0]["handle"])
+        ans.append(['/task3/cf/profile/{}/'.format(handle), handle,
+                    str(requests.get(url.format(i)).json()['result'][0]["rating"])])
     y, reverse = (-2, False) if с == "handle" else (-1, True)
     values = sorted(ans, key=lambda x: x[y], reverse=reverse)
     return render_template("Tables.html", values=values)
@@ -122,5 +130,6 @@ def sftop():
 @app.errorhandler(404)
 def page_not_found():
     return render_template("404.html")
+
 
 app.run()
