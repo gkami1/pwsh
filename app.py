@@ -114,14 +114,14 @@ def sftop():
     names = data['handles']
     ans = list()
     try:
-        с = data['orderby']
+        orderby = data['orderby']
     except:
-        с = "handle"
+        orderby = "handle"
     for i in names.split('|'):
         handle = str(requests.get(url.format(i), proxies=proxies).json()['result'][0]["handle"])
         ans.append(['/task3/cf/profile/{}/'.format(handle), handle,
                     str(requests.get(url.format(i)).json()['result'][0]["rating"])])
-    y, reverse = (-2, False) if с == "handle" else (-1, True)
+    y, reverse = (-2, False) if orderby == "handle" else (-1, True)
     values = sorted(ans, key=lambda x: x[y], reverse=reverse)
     return render_template("Tables.html", values=values)
 
@@ -130,3 +130,4 @@ def sftop():
 def page_not_found():
     return render_template("404.html")
 
+app.run()
