@@ -167,4 +167,3 @@ def secreet(link, secret):
         link_2 = "/task4/santa/toss/{link}/{secret}".format(link=link, secret=secret)
         return render_template("toss_started.html", error_q=error_q, error_f=error_f, players_list=players_list,
                                link_2=link_2)
-app.run()
