@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<ul id="pairs">
+    <h1>Pairs:</h1>
+    {% for person in list_of_keys %}
+    <li style="color:purple">{{person}} + {{pairs[person]}}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

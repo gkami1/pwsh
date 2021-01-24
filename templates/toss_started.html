@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+{% if error_f == True %}
+<a id="error" style="color:blue"> Sorry, game is finished </a>
+{% else %}
+<ul>
+    <h1>Players:</h1>
+    {% for player in players_list %}
+    <li>{{player}}</li>
+    {% endfor %}
+</ul>
+{% if error_q == True %}
+<a id="error" style="color:blue">One more player wanted</a>
+{% else %}
+<form id="toss" name="toss" method="post" action={{link_2}}>
+    <input name="tossing" type="submit" value="Toss!"/>
+</form>
+{% endif %}
+{% endif %}
+</body>
+</html>

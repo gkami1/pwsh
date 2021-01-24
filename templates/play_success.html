@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+{% if error == True %}
+<a id="error" style="color:blue"> Error, the game is finished</a>
+{% else %}
+<a id="success" style="color:purple">Success, you are now in the game!</a>
+<br>
+Your name: {{name}}
+{% endif %}
+</body>
+</html>

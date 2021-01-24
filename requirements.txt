@@ -1,4 +1,4 @@
-requests
 Flask
 gunicorn
+requests
 inflect
