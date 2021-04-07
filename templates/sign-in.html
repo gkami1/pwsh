@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+{%if error%}
+<p id="error">Email/password are incorrect</p>
+{%endif%}
+<form action="" method="post" id="sign-in">
+    <p>Email:</p>
+    <input type="email" name="email"><br>
+    <p>Password:</p>
+    <input type="text" name="password"><br>
+    <input type="submit" value="Send">
+</form>
+{% endblock %}

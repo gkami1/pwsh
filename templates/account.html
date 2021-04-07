@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+<table id="login-attempts">
+  <thead>
+    <tr>
+        <th>Time</th>
+        <th>Ip address</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for ip, time in ips%}
+      <tr>
+          <td>{{time}}</td>
+          <td>{{ip}}</td>
+      </tr>
+    {%endfor%}
+  </tbody>
+</table>
+{%endblock%}

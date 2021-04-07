@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block body %}
+<form action="" method="post" id="work">
+    Number n: <input type="text" name="n" id="n"/><br>
+</form>
+<table id="work">
+    <thead>
+    <tr>
+        <th>Time submitted</th>
+        <th>N</th>
+        <th>P</th>
+        <th>Q</th>
+        <th>Status</th>
+        <th>Elapsed time</th>
+    </tr>
+    </thead>
+    <tbody>
+    {%for time, n, p, q, status, elapsed in works%}
+    <tr>
+        <td>{{time}}</td>
+        <td>{{n}}</td>
+        <td>{{p}}</td>
+        <td>{{q}}</td>
+        <td>{{status}}</td>
+        <td>{{elapsed}}</td>
+    </tr>
+    {%else%}
+    <tr>
+        <td colspan="6" class="table-warning">No work was given yet. Add a new one!</td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+{%endblock%}

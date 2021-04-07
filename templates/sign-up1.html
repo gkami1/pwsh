@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+{% if error %}
+<p id="error">Email currently used!</p>
+{% endif %}
+{% if success %}
+<p id="success">Success. Please follow the link from received mail! (Ilnur shashlik)</p>
+{% else %}
+<form action="" method="post" id="sign-up">
+    Email<input type="email" name="email"/><br>
+    <div class="g-recaptcha" data-sitekey="{{ sitekey }}"></div>
+    <br>
+    <input type="submit" value="Send"/>
+</form>
+{%endif%}
+{% endblock %}

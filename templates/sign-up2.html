@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+{% if error %}
+<p id="error">Passwords aren't equal</p>
+{% endif %}
+<form action="" method="post" id="sign-up">
+    <p>Email: {{ email }}</p><br>
+    <p>Password:</p>
+    <input type="text" name="password"><br>
+    <input type="text" name="password2"><br>
+    <input type="submit" value="Sign up">
+</form>
+{% endblock %}
