@@ -43,7 +43,7 @@ def sign_up1():
             return render_template("sign-up1.html", sitekey=os.environ['site_key'], error=True)
         addr = ''.join([rnd.choice(chars) for i in range(8)])
         msg = EmailMessage()
-        msg.set_content(f'link: https://hwr1.herokuapp.com/task5/verification/{addr}')
+        msg.set_content(f'link: https://sosiskak.herokuapp.com/task5/verification/{addr}')
         msg['Subject'] = 'Activation link'
         msg['From'] = 'no-reply@hwr1.herokuapp.com'
         msg['To'] = email
